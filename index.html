@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&family=Outfit:wght@100..900&family=Victor+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<title>Your age</title>
+</head>
+<body>
+	<script type="text/javascript">
+		let age = 0;
+		let refreshInterval = 10;
+		let ageIncrementValue = 1/(365 * 24 * 60 * 60 * (1000 / refreshInterval));
+
+		function isLeapYear(year) {
+    		return year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
+		}
+
+		function calculateExactAgeWithCorrectedLinearCorrection(dateOfBirth, currentDate) {
+		    const dob = new Date(dateOfBirth);
+		    const current = new Date(currentDate);
+
+		    // Розрахунок цілої частини віку
+		    let ageYears = current.getFullYear() - dob.getFullYear();
+		    if (current.getMonth() < dob.getMonth() || (current.getMonth() === dob.getMonth() && current.getDate() < dob.getDate())) {
+		        ageYears--; // Якщо ще не було дня народження в цьому році, віднімаємо один рік
+		    }
+
+		    // Визначення дати останнього дня народження
+		    const lastBirthday = new Date(current.getFullYear(), dob.getMonth(), dob.getDate());
+		    if (current < lastBirthday) {
+		        lastBirthday.setFullYear(lastBirthday.getFullYear() - 1);
+		    }
+
+		    // Розрахунок кількість днів від останнього дня народження до поточної дати
+		    const daysSinceLastBirthday = (current - lastBirthday) / (1000 * 60 * 60 * 24);
+		    
+		    // Визначення кількості днів у поточному році
+		    const daysInCurrentYear = isLeapYear(current.getFullYear()) ? 366 : 365;
+
+		    // Виправлення корекції, щоб вона була в межах 0 до 1
+		    let correction = daysSinceLastBirthday / daysInCurrentYear;
+		    if (correction >= 1) {
+		        correction = 0; // Це означає, що ми повинні були вже врахувати цю корекцію в цілу частину віку
+		    }
+
+		    // Повертаємо суму цілої та дробової частини з корекцією
+		    const totalAge = ageYears + correction;
+		    return totalAge;
+		}
+
+
+		function updateAge() {
+		  age += ageIncrementValue; // Додаємо дрібну частку до віку
+		  document.getElementById("age").textContent = age.toFixed(11) + " y.o."; // Виведення віку
+		}
+		function initDate() {
+			const dateOfBirth = "2004-09-22T00:00:00";
+			//const currentDate = "2023-09-21T23:59:45";
+			const currentDate = Date.now();
+		  	age = calculateExactAgeWithCorrectedLinearCorrection(dateOfBirth, currentDate);
+		}
+		window.onload = function() {
+			initDate();
+		  	setInterval(updateAge, refreshInterval); // Плануємо оновлення віку кожні 10 мс
+		};
+
+		window.addEventListener('focus', function() {
+		    initDate();
+		});
+	</script>
+	<div class="container">
+		<h1 id="age"></p>
+	</div>
+</body>
+</html>

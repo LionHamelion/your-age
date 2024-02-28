@@ -1,0 +1,19 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+body {
+	background: #060b24;
+	color: #9636e0;
+	font-family: "Victor Mono", monospace;
+	font-optical-sizing: auto;
+	font-weight: 1;
+	font-style: normal;
+}
+.container {
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
