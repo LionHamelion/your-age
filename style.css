@@ -3,6 +3,7 @@
 	padding: 0;
 	box-sizing: border-box;
 }
+
 body {
 	background: #060b24;
 	color: #9636e0;
@@ -11,9 +12,170 @@ body {
 	font-weight: 1;
 	font-style: normal;
 }
+
+.settings-bar-container {
+	position: absolute;
+	top: 1.2vh;
+	right: 	0;
+	overflow: 	hidden	;
+}
+
+.settings-bar {
+	position: 	relative;
+	display: flex;
+	opacity: 0.7;
+	border-bottom-left-radius: 100vw;
+	border-top-left-radius: 100vw;
+	width: 100px;
+	height: 75px;
+	background: rgba(150, 54, 224, 0.4);
+	right: 	-66%;
+	transition-duration: 0.2s, 0.3s, 0.6s;
+	transition-property: opacity, right, background-color;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.settings-bar:hover {
+	opacity: 1;
+	right: 	0;
+}
+
+.settings-icon {
+	cursor: pointer;
+	padding: 7px;
+	border-radius: 9px;
+	background: rgba(213, 144, 255, 0.25);
+	margin-left: 34px;
+}
+
+.fa-cog {
+    font-size: 44px;
+    color: #9636e0;
+    transition: 0.2s;
+}
+
 .container {
 	height: 100vh;
 	display: flex;
 	justify-content: center;
 	align-items: center;
+}
+
+
+.settings-div {
+	display: none;
+	color: white;
+	font-weight: bold;
+    position: fixed;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 600px;
+    height: 600px;
+    padding: 60px;
+    border-radius: 20px;
+    background: #060b24;
+    box-shadow: 28px 7px 44px rgba(78, 61, 120, 0.4), 
+                -28px -7px 44px rgba(240, 240, 240, 0.1);
+}
+
+.settings-row {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.fa-cog:hover {
+	transform: rotate(90deg);
+}
+
+
+input[type="date"] {
+        height: 40px;
+        width: 200px;
+        border: none;
+        padding: 0 10px;
+        border-radius: 5px;
+        background-color: rgba(150, 54, 224, 0.33); /* світлий сірий фон */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* м'яка тінь для тривимірного ефекту */
+        font-size: 16px;
+        color: #eee;
+    }
+
+input[type="date"]:focus {
+        outline: none;
+        box-shadow: 0 0 5px 2px rgba(100, 100, 255, 0.5); /* синя тінь навколо при фокусі */
+}
+
+.settings-content {
+    width: 100%; /* Забезпечує, що вміст заповнює доступну ширину */
+}
+
+.apply-button {
+    width: 100%; /* Ширина кнопки, щоб вона була повною шириною контейнера */
+    padding: 10px 0; /* Збільшуємо падінг для кращого візуального ефекту */
+    color: white; /* Колір тексту кнопки */
+    border: none; /* Видаляємо стандартну рамку кнопки */
+    background: rgba(150, 54, 224, 0.33);
+    border-radius: 14px; /* Закруглення кутів кнопки */
+    cursor: pointer; /* Курсор у вигляді пальця, який натискає на кнопку */
+    transition: 0.1s;
+}
+
+.apply-button:hover {
+	background: rgba(150, 54, 224, 0.5);
+}
+
+.apply-button:active {
+    background: rgba(150, 54, 224, 0.33);
+}
+
+button {
+	cursor: pointer;
+	border-radius: 12px;
+	padding: 10px;
+	font-family: "Victor Mono", monospace;
+	font-optical-sizing: auto;
+	font-weight: 1;
+	font-size: 32px;
+	font-style: normal;
+	background: #9636e0;
+}
+
+@media (max-width: 700px) {
+    .settings-div {
+    	font-size: 30px;
+        width: 90%; /* зменшуємо ширину, щоб вона займала менше місця */
+        height: auto; /* дозволяємо вмісту визначати висоту */
+        padding: 20px; /* зменшуємо падінги для економії місця */
+        overflow-y: auto; /* додаємо прокрутку, якщо вміст не поміщається */
+        box-shadow: none; /* опціонально, можна прибрати тінь для чистоти дизайну */
+    }
+
+    .settings-content,
+    .apply-button {
+        width: 100%; /* дозволяємо вмісту займати всю ширину */
+    }
+
+    input[type="date"] {
+    	font-size: 30px;
+        width: calc(100% - 20px); /* зменшуємо ширину інпуту, враховуючи падінг */
+    }
+
+    .settings-row {
+        flex-direction: column; /* елементи в колонку для кращого читання */
+        align-items: flex-start; /* вирівнювання по лівому краю */
+        margin: 20px 0;
+    }
+
+    .settings-row label,
+    .settings-row input {
+    	margin: 20px 0;
+        width: 100%; /* забезпечуємо, що label та input займають всю доступну ширину */
+    }
+
+    .apply-button {
+        margin-top: 20px; /* додаємо верхній відступ для кнопки */
+    }
 }
