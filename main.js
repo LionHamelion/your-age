@@ -30,40 +30,36 @@ function isLeapYear(year) {
 }
 
 function calculateExactAgeWithCorrectedLinearCorrection(dateOfBirth, currentDate) {
-    const dob = new Date(dateOfBirth);
-    const current = new Date(currentDate);
+	    const dob = new Date(dateOfBirth);
+	    const current = new Date(currentDate);
 
-    // Розрахунок цілої частини віку
-    let ageYears = current.getFullYear() - dob.getFullYear();
-    if (current.getMonth() < dob.getMonth() || (current.getMonth() === dob.getMonth() && current.getDate() < dob.getDate()) || 
-       (current.getMonth() === dob.getMonth() && current.getDate() === dob.getDate() && current.getHours() < dob.getHours()) ||
-       (current.getMonth() === dob.getMonth() && current.getDate() === dob.getDate() && current.getHours() === dob.getHours() && current.getMinutes() < dob.getMinutes())) {
-        ageYears--; // Якщо ще не було дня народження в цьому році, віднімаємо один рік
-    }
+	    // Розрахунок цілої частини віку
+	    let ageYears = current.getFullYear() - dob.getFullYear();
+	    if (current.getMonth() < dob.getMonth() || (current.getMonth() === dob.getMonth() && current.getDate() < dob.getDate())) {
+	        ageYears--; // Якщо ще не було дня народження в цьому році, віднімаємо один рік
+	    }
 
-    // Визначення дати останнього дня народження з урахуванням часу
-    const lastBirthday = new Date(current.getFullYear(), dob.getMonth(), dob.getDate(), dob.getHours(), dob.getMinutes());
-    if (current < lastBirthday) {
-        lastBirthday.setFullYear(lastBirthday.getFullYear() - 1);
-    }
+	    // Визначення дати останнього дня народження
+	    const lastBirthday = new Date(current.getFullYear(), dob.getMonth(), dob.getDate());
+	    if (current < lastBirthday) {
+	        lastBirthday.setFullYear(lastBirthday.getFullYear() - 1);
+	    }
 
-    // Розрахунок кількість мілісекунд від останнього дня народження до поточної дати
-    const millisecondsSinceLastBirthday = current - lastBirthday;
+	    // Розрахунок кількість днів від останнього дня народження до поточної дати
+	    const daysSinceLastBirthday = (current - lastBirthday) / (1000 * 60 * 60 * 24);
+	    
+	    // Визначення кількості днів у поточному році
+	    const daysInCurrentYear = isLeapYear(current.getFullYear()) ? 366 : 365;
 
-    // Визначення кількості мілісекунд у поточному році
-    const startOfYear = new Date(current.getFullYear(), 0, 1, 0, 0, 0, 0);
-    const endOfYear = new Date(current.getFullYear() + 1, 0, 1, 0, 0, 0, 0);
-    const millisecondsInCurrentYear = endOfYear - startOfYear;
+	    // Виправлення корекції, щоб вона була в межах 0 до 1
+	    let correction = daysSinceLastBirthday / daysInCurrentYear;
+	    if (correction >= 1) {
+	        correction = 0; // Це означає, що ми повинні були вже врахувати цю корекцію в цілу частину віку
+	    }
 
-    // Виправлення корекції, щоб вона була в межах 0 до 1
-    let correction = millisecondsSinceLastBirthday / millisecondsInCurrentYear;
-    if (correction >= 1) {
-        correction = 0; // Це означає, що ми повинні були вже врахувати цю корекцію в цілу частину віку
-    }
-
-    // Повертаємо суму цілої та дробової частини з корекцією
-    const totalAge = ageYears + correction;
-    return totalAge;
+	    // Повертаємо суму цілої та дробової частини з корекцією
+	    const totalAge = ageYears + correction;
+	    return totalAge;
 }
 
 function updateAge() {
