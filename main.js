@@ -34,31 +34,31 @@ function calculateExactAgeWithCorrectedLinearCorrection(dateOfBirth, currentDate
 	    const dob = new Date(dateOfBirth);
 	    const current = new Date(currentDate);
 
-	    // Розрахунок цілої частини віку
+	    // Calculate whole years of age
 	    let ageYears = current.getFullYear() - dob.getFullYear();
 	    if (current.getMonth() < dob.getMonth() || (current.getMonth() === dob.getMonth() && current.getDate() < dob.getDate())) {
-	        ageYears--; // Якщо ще не було дня народження в цьому році, віднімаємо один рік
+	        ageYears--; // If birthday hasn't occurred yet this year, subtract one year
 	    }
 
-	    // Визначення дати останнього дня народження
+	    // Find the date of the last birthday
 	    const lastBirthday = new Date(current.getFullYear(), dob.getMonth(), dob.getDate());
 	    if (current < lastBirthday) {
 	        lastBirthday.setFullYear(lastBirthday.getFullYear() - 1);
 	    }
 
-	    // Розрахунок кількість днів від останнього дня народження до поточної дати
+	    // Calculate the number of days since the last birthday to the current date
 	    const daysSinceLastBirthday = (current - lastBirthday) / (1000 * 60 * 60 * 24);
 	    
-	    // Визначення кількості днів у поточному році
+	    // Determine the number of days in the current year
 	    const daysInCurrentYear = isLeapYear(current.getFullYear()) ? 366 : 365;
 
-	    // Виправлення корекції, щоб вона була в межах 0 до 1
+	    // Correct the correction to make sure it is between 0 and 1
 	    let correction = daysSinceLastBirthday / daysInCurrentYear;
 	    if (correction >= 1) {
-	        correction = 0; // Це означає, що ми повинні були вже врахувати цю корекцію в цілу частину віку
+	        correction = 0; // This means we should already have counted this correction in the whole part of the age
 	    }
 
-	    // Повертаємо суму цілої та дробової частини з корекцією
+	    // Return the sum of the whole and fractional part with correction
 	    const totalAge = ageYears + correction;
 	    return totalAge;
 }
@@ -76,7 +76,7 @@ function updateAge() {
 
 window.onload = function() {
 		initDate();
-	  	setInterval(updateAge, refreshInterval); // Плануємо оновлення віку кожні 10 мс
+	  	setInterval(updateAge, refreshInterval); // Schedule age update every 10 ms
 };
 
 window.addEventListener('focus', function() {
@@ -86,30 +86,31 @@ window.addEventListener('focus', function() {
 function initDate() {
 	dateOfBirth = getCookie("dateOfBirth");
 	if (!dateOfBirth) {
-		document.querySelector(".settings-div").style.display = 'flex'; // Показати settings-div
+		document.querySelector(".settings-div").style.display = 'flex'; // Show settings-div
 		document.querySelector(".settings-bar").style.display = 'none';
 		return;
 	}
 
 	const currentDate = Date.now();
 	age = calculateExactAgeWithCorrectedLinearCorrection(dateOfBirth, currentDate);
+	previousWholeAge = Math.floor(age);
 	updateAge();
 }
 
 window.onload = function() {
 	initDate();
-	setInterval(updateAge, refreshInterval); // Оновлення віку кожні 10 мс
+	setInterval(updateAge, refreshInterval); // Update age every 10 ms
 };
 
 window.addEventListener('focus', function() {
 	initDate();
 });
 
-// Функція для збереження дати народження та приховування settings-div
+// Function to save date of birth and hide settings-div
 function applyDateOfBirth() {
     let dateOfBirth = document.querySelector("input[type='date']").value;
     if (dateOfBirth) {
-        let isNewCookie = !getCookie("dateOfBirth"); // Перевірка чи це новий cookie
+        let isNewCookie = !getCookie("dateOfBirth"); // Check if this is a new cookie
         setCookie("dateOfBirth", dateOfBirth, 365);
         initDate();
         document.querySelector(".settings-div").style.display = 'none';
@@ -117,15 +118,15 @@ function applyDateOfBirth() {
         if (isNewCookie) {
         	document.querySelector(".settings-bar").style.display = 'flex';
             const settingsBar = document.querySelector(".settings-bar");
-            settingsBar.style.backgroundColor = "white"; // Зміна кольору на 2 секунди
+            settingsBar.style.backgroundColor = "white"; // Change color for 2 seconds
             setTimeout(() => {
-                settingsBar.style.backgroundColor = ""; // Повернення до початкового кольору
+                settingsBar.style.backgroundColor = ""; // Revert to original color
             }, 2000);
         }
     }
 }
 
-// Призначення обробника події для кнопки "Apply"
+// Assign event handler to "Apply" button
 document.querySelector(".apply-button").addEventListener('click', applyDateOfBirth);
 
 function toggleSettings() {
@@ -134,5 +135,5 @@ function toggleSettings() {
   settingsDiv.style.display = isDisplayed ? 'none' : 'flex';
 }
 
-// Призначення обробника події для кнопки з шестернею
+// Assign event handler to gear button
 document.querySelector(".settings-icon").addEventListener('click', toggleSettings);
