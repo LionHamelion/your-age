@@ -1,6 +1,7 @@
 let age = 0;
 let dateOfBirth = 0;
-refreshInterval = 10;
+let refreshInterval = 10;
+let previousWholeAge = 0;
 
 function setCookie(name,value,days) {
     var expires = "";
