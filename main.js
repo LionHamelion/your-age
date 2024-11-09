@@ -64,9 +64,14 @@ function calculateExactAgeWithCorrectedLinearCorrection(dateOfBirth, currentDate
 
 function updateAge() {
 	age = calculateExactAgeWithCorrectedLinearCorrection(dateOfBirth, Date.now());
-	document.getElementById("age").textContent = age.toFixed(11) + " y.o."; // Виведення віку
-}
+	document.getElementById("age").textContent = age.toFixed(11) + " y.o."; // Displaying age
 
+	const currentWholeAge = Math.floor(age);
+	if (currentWholeAge > previousWholeAge) {
+		celebrate(); // Call celebrate function when age moves to the next whole number
+	}
+	previousWholeAge = currentWholeAge;
+}
 
 window.onload = function() {
 		initDate();

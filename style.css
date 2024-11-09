@@ -13,6 +13,14 @@ body {
 	font-style: normal;
 }
 
+#confetti{
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+  }
+
 .settings-bar-container {
 	position: absolute;
 	top: 1.2vh;
