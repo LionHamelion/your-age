@@ -1,5 +1,5 @@
 let age = 0;
-let dateOfBirth = 0;
+let dateOfBirth = null;
 let refreshInterval = 10;
 let previousWholeAge = 0;
 
@@ -64,59 +64,56 @@ function calculateExactAgeWithCorrectedLinearCorrection(dateOfBirth, currentDate
 }
 
 function updateAge() {
-	age = calculateExactAgeWithCorrectedLinearCorrection(dateOfBirth, Date.now());
-	document.getElementById("age").textContent = age.toFixed(11) + " y.o."; // Displaying age
+    if (!dateOfBirth) {
+        return;
+    }
+    
+    age = calculateExactAgeWithCorrectedLinearCorrection(dateOfBirth, Date.now());
+    document.getElementById("age").textContent = age.toFixed(11) + " y.o."; // Displaying age
 
-	const currentWholeAge = Math.floor(age);
-	if (currentWholeAge > previousWholeAge) {
-		celebrate(); // Call celebrate function when age moves to the next whole number
-	}
-	previousWholeAge = currentWholeAge;
+    const currentWholeAge = Math.floor(age);
+    if (currentWholeAge > previousWholeAge) {
+        celebrate(); // Call celebrate function when age moves to the next whole number
+    }
+    previousWholeAge = currentWholeAge;
+}
+
+function initDate() {
+    dateOfBirth = getCookie("dateOfBirth");
+    if (!dateOfBirth) {
+        document.querySelector(".settings-div").style.display = 'flex'; // Show settings-div
+        document.querySelector(".settings-bar").style.display = 'none';
+        return;
+    }
+
+    const currentDate = Date.now();
+    age = calculateExactAgeWithCorrectedLinearCorrection(dateOfBirth, currentDate);
+    previousWholeAge = Math.floor(age);
+    updateAge();
+
+    setInterval(updateAge, refreshInterval);
 }
 
 window.onload = function() {
-		initDate();
-	  	setInterval(updateAge, refreshInterval); // Schedule age update every 10 ms
+    initDate();
 };
 
 window.addEventListener('focus', function() {
     initDate();
 });
 
-function initDate() {
-	dateOfBirth = getCookie("dateOfBirth");
-	if (!dateOfBirth) {
-		document.querySelector(".settings-div").style.display = 'flex'; // Show settings-div
-		document.querySelector(".settings-bar").style.display = 'none';
-		return;
-	}
-
-	const currentDate = Date.now();
-	age = calculateExactAgeWithCorrectedLinearCorrection(dateOfBirth, currentDate);
-	previousWholeAge = Math.floor(age);
-	updateAge();
-}
-
-window.onload = function() {
-	initDate();
-	setInterval(updateAge, refreshInterval); // Update age every 10 ms
-};
-
-window.addEventListener('focus', function() {
-	initDate();
-});
-
 // Function to save date of birth and hide settings-div
 function applyDateOfBirth() {
-    let dateOfBirth = document.querySelector("input[type='date']").value;
-    if (dateOfBirth) {
+    let dateOfBirthInput = document.querySelector("input[type='date']").value;
+    if (dateOfBirthInput) {
         let isNewCookie = !getCookie("dateOfBirth"); // Check if this is a new cookie
-        setCookie("dateOfBirth", dateOfBirth, 365);
+        setCookie("dateOfBirth", dateOfBirthInput, 365);
+        dateOfBirth = dateOfBirthInput;
         initDate();
         document.querySelector(".settings-div").style.display = 'none';
 
         if (isNewCookie) {
-        	document.querySelector(".settings-bar").style.display = 'flex';
+            document.querySelector(".settings-bar").style.display = 'flex';
             const settingsBar = document.querySelector(".settings-bar");
             settingsBar.style.backgroundColor = "white"; // Change color for 2 seconds
             setTimeout(() => {
